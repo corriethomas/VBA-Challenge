@@ -1,0 +1,113 @@
+Sub Ticker_and_Total():
+  Dim ws As Worksheet
+      
+  For Each ws In Worksheets
+    'Create Columns
+        
+    Dim Symbol As String
+    Symbol = "Ticker Symbol"
+    ws.Range("I1").Value = Symbol
+    
+    Dim YearChange As String
+    YearChange = "Yearly Change"
+    ws.Range("J1").Value = YearChange
+    
+    Dim Percent As String
+    Percent = "Percent Change"
+    ws.Range("K1").Value = Percent
+    
+    Dim Stock As String
+    Stock = "Total Stock Volume"
+    ws.Range("L1").Value = Stock
+    
+    LastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+    
+    'Pull Ticker Symbol and Total Stock Volume
+        Dim TickerSymbol As String
+        Dim TickerCount As Integer
+        TickerCount = 2
+        Dim StockVol As LongLong
+        StockVol = 0
+    
+            For i = 2 To LastRow
+                If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+                TickerSymbol = ws.Cells(i, 1).Value
+                ws.Range("I" & TickerCount).Value = TickerSymbol
+                StockVol = StockVol + ws.Cells(i, 7).Value
+                ws.Range("L" & TickerCount).Value = StockVol
+                TickerCount = TickerCount + 1
+        
+                StockVol = 0
+        
+                ElseIf ws.Cells(i + 1, 1).Value = ws.Cells(i, 1).Value Then
+                StockVol = StockVol + ws.Cells(i, 7).Value
+        
+                End If
+        
+            Next i
+        
+    'Pull Yearly Change
+        TickerCount = 2
+    
+        Dim ClosePrice As Double
+        Dim CloseDate As Long
+        CloseDate = 20161230
+        Dim ClosingPrice As Double
+    
+        Dim OpenPrice As Double
+        Dim OpenDate As Long
+        OpenDate = 20160101
+        Dim OpeningDate As Double
+    
+        Dim YearlyChange As Double
+                   
+            For i = 2 To LastRow
+                If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+                OpeningPrice = ws.Cells(i, 3).Value
+                ClosingPrice = ws.Cells(i, 6).Value
+        
+                YearlyChange = ClosingPrice - OpeningPrice
+        
+                ws.Range("J" & TickerCount).Value = YearlyChange
+                    If YearlyChange > 0 Then
+                    ws.Range("J" & TickerCount).Interior.ColorIndex = 4
+                    
+                    ElseIf YearlyChange < 0 Then
+                    ws.Range("J" & TickerCount).Interior.ColorIndex = 3
+                    
+                    End If
+                TickerCount = TickerCount + 1
+        
+                End If
+            
+            Next i
+            
+    'Pull Percent Change
+        TickerCount = 2
+     
+        Dim PercentChange As Double
+                   
+            For i = 2 To LastRow
+                If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+                OpeningPrice = ws.Cells(i, 3).Value
+                ClosingPrice = ws.Cells(i, 6).Value
+                
+                PercentChange = ((ClosingPrice / OpeningPrice) - 1)
+                                    
+                ws.Range("K" & TickerCount).Value = PercentChange
+                    If PercentChange > 0 Then
+                    ws.Range("K" & TickerCount).Interior.ColorIndex = 4
+                    
+                    ElseIf PercentChange < 0 Then
+                    ws.Range("K" & TickerCount).Interior.ColorIndex = 3
+                    
+                    End If
+        
+                TickerCount = TickerCount + 1
+        
+                End If
+            
+            Next i
+            
+     Next ws
+End Sub
