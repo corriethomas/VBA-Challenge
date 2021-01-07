@@ -122,17 +122,19 @@ Sub Tickers():
         
         Dim PercentChange As Double
         Dim PercentDiff As Double
+        Dim DivPrice As Double
                 
         For j = 2 To LastTicker
             ClosePrice = ws.Range("O" & ClosingPrice_Counter).Value
             OpenPrice = ws.Range("N" & OpeningPrice_Counter).Value
+            DivPrice = ws.Range("N" & OpeningPrice_Counter).Value
             
-            PercentDiff = ClosePrice - OpenPrice
-                If ClosePrice = 0 And OpenPrice = 0 Then
-                PercentChange = 0
-                
-                Else: PercentChange = PercentDiff / ClosePrice
-                End If
+            If (ClosePrice = 0) And (OpenPrice = 0) And (DivPrice = 0) Then
+            PercentChange = 0
+            
+            ElseIf (ClosePrice <> 0) And (OpenPrice <> 0) And (DivPrice <> 0) Then
+            PercentChange = (ClosePrice - OpenPrice) / DivPrice
+            End If
             
             ws.Range("K" & TickerCount).Value = PercentChange
                 
